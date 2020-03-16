@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.androidkt.mqtt.MainActivity">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/settings_client"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="13dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:text="Settings client"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@android:color/darker_gray"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:text="IP address server"/>
+
+                <EditText
+                    android:id="@+id/id_server"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:textSize="15dp"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:hint="192.168.1.1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:text="Client ID" />
+
+                <EditText
+                    android:id="@+id/editText2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:textSize="15dp"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:hint="androidkt"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/reconnection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15dp"
+                android:text="Reconection" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="13dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:text="Advanced settings"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <Button
+                    android:id="@+id/pun_button"
+                    android:layout_width="125dp"
+                    android:layout_height="48dp"
+                    android:text="Publish"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:id="@+id/pub_topic"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:textSize="15dp"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:windowSoftInputMode="stateAlwaysHidden"
+                    android:hint="topic"/>
+
+                <EditText
+                    android:id="@+id/pub_msg"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:textSize="15dp"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:windowSoftInputMode="stateAlwaysHidden"
+                    android:hint="Message"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/sub_button"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:text="Subscribe"/>
+
+                <EditText
+                    android:id="@+id/sub_topic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:hint="topic"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:textSize="15dp"
+                    android:windowSoftInputMode="stateAlwaysHidden" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/unsub_button"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:text="Unsubscribe"/>
+
+                <EditText
+                    android:id="@+id/unsub_topic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:textSize="15dp"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:windowSoftInputMode="stateAlwaysHidden"
+                    android:hint="topic"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/plan_1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/about_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="13dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:text="About server systems"/>
+
+            <ImageView
+                android:id="@+id/plan_1_1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@android:color/darker_gray"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:text="Temperature C° core"/>
+
+                <EditText
+                    android:id="@+id/text_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:hint="Temp C°"
+                    android:textSize="15dp"
+                    android:windowSoftInputMode="stateAlwaysHidden" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:text="Time on server" />
+
+                <EditText
+                    android:id="@+id/text_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:hint="23.59.59 31.12.2099"
+                    android:textSize="15dp"
+                    android:windowSoftInputMode="stateAlwaysHidden" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:text="Client connect" />
+
+                <EditText
+                    android:id="@+id/text_client"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:gravity="right"
+                    android:hint="android 1, android 2, android 3, ..."
+                    android:textSize="15dp"
+                    android:windowSoftInputMode="stateAlwaysHidden" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="13dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:text="Different actions"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@android:color/darker_gray"/>
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:showText="false"
+                android:text="Switch Light"
+                android:visibility="visible"
+                android:textSize="15dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="15dp"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:text="Media center"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <ImageButton
+                    android:id="@+id/media_previous"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@android:drawable/ic_media_rew" />
+
+                <ImageButton
+                    android:id="@+id/media_play"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@android:drawable/ic_media_play" />
+
+                <ImageButton
+                    android:id="@+id/media_following"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@android:drawable/ic_media_ff" />
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="2dp"
+                android:background="@android:color/transparent"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</android.support.constraint.ConstraintLayout>
