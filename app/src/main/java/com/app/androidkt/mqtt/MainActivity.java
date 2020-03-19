@@ -25,20 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private static MqttAndroidClient client;
     private String TAG = "MainActivity";
 
-    BroadcastReceiver br;
-    final String LOG_TAG = "BroadcastReceiver";
-    final int TASK1_CODE = 1;
-    final int TASK2_CODE = 2;
-    final int TASK3_CODE = 3;
-    public final static int STATUS_START = 100;
-    public final static int STATUS_FINISH = 200;
-    public final static String PARAM_TIME = "time";
-    public final static String PARAM_TASK = "task";
-    public final static String PARAM_RESULT = "result";
-    public final static String PARAM_STATUS = "status";
-    public final static String BROADCAST_ACTION = "BROADCAST_ACTION";
-
-
     private EditText textMessage,textTopic, subscribeTopic, unSubscribeTopic, textTemp, textTime, textClient;
     private Button publishMessage, subscribe, unSubscribe;
 
@@ -46,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         pahoMqttClient = new PahoMqttClient();
         client = pahoMqttClient.getMqttClient(getApplicationContext(), Constants.MQTT_BROKER_URL, Constants.CLIENT_ID);
 
@@ -80,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Message or Topic is empty!", Toast.LENGTH_SHORT).show();
+                    if (msg.isEmpty()) Toast.makeText(getApplicationContext(), "Message is empty!", Toast.LENGTH_SHORT).show();
+                    else if (top.isEmpty()) Toast.makeText(getApplicationContext(), "Topic is empty!", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(getApplicationContext(), "Message or Topic is empty!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -132,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(br);
     }
     public static PahoMqttClient getPahoMqttClient() {
         return pahoMqttClient;
