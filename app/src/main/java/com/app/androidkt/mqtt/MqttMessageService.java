@@ -16,6 +16,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import com.app.androidkt.mqtt.MainActivity;
+import com.app.androidkt.mqtt.StartActivity;
+import com.app.androidkt.mqtt.ui.home.HomeFragment;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +40,9 @@ public class MqttMessageService extends Service {
 //        pahoMqttClient = new PahoMqttClient();
 //        mqttAndroidClient = pahoMqttClient.getMqttClient(getApplicationContext(), Constants.MQTT_BROKER_URL, Constants.CLIENT_ID);
 
+//        pahoMqttClient = MainActivity.getPahoMqttClient();
+//        mqttAndroidClient = MainActivity.getMqttAndroidClient();
+
         pahoMqttClient = MainActivity.getPahoMqttClient();
         mqttAndroidClient = MainActivity.getMqttAndroidClient();
 
@@ -55,6 +60,12 @@ public class MqttMessageService extends Service {
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 setMessageNotification(s, new String(mqttMessage.getPayload()));
+                switch (s){
+                    case "light": HomeFragment.setTemp(new String(mqttMessage.getPayload()));
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -83,25 +94,21 @@ public class MqttMessageService extends Service {
     }
 
     private void setMessageNotification(@NonNull String topic, @NonNull String msg) {
-        if (topic == "light") {
-            //mainActivity.setTemp(msg);
-        } else {
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_message_black_24dp)
-                            .setContentTitle(topic)
-                            .setContentText(msg);
-            Intent resultIntent = new Intent(this, MainActivity.class);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_message_black_24dp)
+                        .setContentTitle(topic)
+                        .setContentText(msg);
+        Intent resultIntent = new Intent(this, MainActivity.class);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(MainActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(100, mBuilder.build());
-        }
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(100, mBuilder.build());
     }
 }

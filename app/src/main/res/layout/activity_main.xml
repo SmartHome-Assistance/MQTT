@@ -362,21 +362,24 @@
                     android:layout_width="10dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_media_rew" />
+                    app:srcCompat="@android:drawable/ic_media_rew"
+                    android:background="@android:color/transparent"/>
 
                 <ImageButton
                     android:id="@+id/media_play"
                     android:layout_width="10dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_media_play" />
+                    app:srcCompat="@android:drawable/ic_media_play"
+                    android:background="@android:color/transparent" />
 
                 <ImageButton
                     android:id="@+id/media_following"
                     android:layout_width="10dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@android:drawable/ic_media_ff" />
+                    app:srcCompat="@android:drawable/ic_media_ff"
+                    android:background="@android:color/transparent" />
             </LinearLayout>
 
 
