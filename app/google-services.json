@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "109228087289",
+    "firebase_url": "https://smart-home-assistance.firebaseio.com",
+    "project_id": "smart-home-assistance",
+    "storage_bucket": "smart-home-assistance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109228087289:android:c2f65c66fad5a8438c0f28",
+        "android_client_info": {
+          "package_name": "com.app.androidkt.mqtt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109228087289-l6ek1ckfrhjmado9ogjacnn7hvnrqnkd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdraFGFPDF2NLaB26aq6BQgkMxfSUcb7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109228087289-l6ek1ckfrhjmado9ogjacnn7hvnrqnkd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
