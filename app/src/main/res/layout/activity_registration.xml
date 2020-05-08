@@ -223,7 +223,7 @@
                     android:background="#14ffffff"
                     android:ems="10"
                     android:hint=" ******"
-                    android:inputType="textPersonName"
+                    android:inputType="textPassword"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
             </LinearLayout>
@@ -275,7 +275,7 @@
                     android:background="#14ffffff"
                     android:ems="10"
                     android:hint=" exaple@mail.ru"
-                    android:inputType="textPersonName"
+                    android:inputType="textEmailAddress"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
             </LinearLayout>

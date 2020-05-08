@@ -1,13 +1,12 @@
 package com.app.androidkt.mqtt;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,14 +14,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,21 +32,33 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.app.androidkt.mqtt.ui.statistic.Statistic;
+import com.app.androidkt.mqtt.ui.statistic.StatisticFragment;
 import com.app.androidkt.mqtt.ui.dashboard.DashboardFragment;
 import com.app.androidkt.mqtt.ui.event.EventFragment;
 import com.app.androidkt.mqtt.ui.manage.ManageFragment;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import com.app.androidkt.mqtt.R;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -78,114 +90,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView userName, userStatus;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private DatabaseReference databaseReference;
 
-    private DashboardFragment dashboardFragment;
+    private static DashboardFragment dashboardFragment;
     private ManageFragment manageFragment;
     private EventFragment eventFragment;
+    private Statistic statisticFragment;
+    private List<String> DATA;
+    private boolean con;
+    private Switch mainSwitch;
+    private static String swi;
+    private Timer mTimer;
+    private TimerTask mMyTimerTask;
+
+    static LocalDate startMainLight;
+    static LocalDate stopMainLight;
+    static LocalDate startExtraLight;
+    static LocalDate stopExtraLight;
+    static LocalDate startMusicBox;
+    static LocalDate stopMusicBox;
+    static long totalMain, totalExtra, totalMusic;
 
     private ActionBarDrawerToggle toggle;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_menu);
+
         pahoMqttClient = new PahoMqttClient();
         client = pahoMqttClient.getMqttClient(getApplicationContext(), Constants.MQTT_BROKER_URL, Constants.CLIENT_ID);
-
+        con = false;
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
+        totalExtra = 0;
+        totalMain = 0;
+        totalMusic = 0;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-//        textTemp   = (EditText) findViewById(R.id.text_temp);
-//        textTime   = (EditText) findViewById(R.id.text_time);
-//        textClient = (EditText) findViewById(R.id.text_client);
-//
-//        textMessage    = (EditText) findViewById(R.id.pub_msg);
-//        textTopic      = (EditText) findViewById(R.id.pub_topic);
-//        publishMessage = (Button)   findViewById(R.id.pun_button);
-//
-//        subscribeTopic = (EditText) findViewById(R.id.sub_topic);
-//        subscribe      = (Button)   findViewById(R.id.sub_button);
-//
-//        unSubscribeTopic = (EditText) findViewById(R.id.unsub_topic);
-//        unSubscribe      = (Button)   findViewById(R.id.unsub_button);
-//
-//        reConnection = (Button) findViewById(R.id.reconnection);
-//
-//        publishMessage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String msg = textMessage.getText().toString().trim();
-//                String top = textTopic.getText().toString().trim();
-//                if (!msg.isEmpty() || !top.isEmpty()) {
-//                    try {
-//                        pahoMqttClient.publishMessage(client, msg, 1, top);
-//                        Toast.makeText(getApplicationContext(), "\"" + msg + "\" has been sent to " + top, Toast.LENGTH_SHORT).show();
-//                    } catch (MqttException e) {
-//                        Toast.makeText(getApplicationContext(), "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
-//                        e.printStackTrace();
-//                    } catch (UnsupportedEncodingException e) {
-//                        e.printStackTrace();
-//                        Toast.makeText(getApplicationContext(), "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "Message or Topic is empty!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//        subscribe.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String topic = subscribeTopic.getText().toString().trim();
-//                if (!topic.isEmpty()) {
-//                    try {
-//                        pahoMqttClient.subscribe(client, topic, 1);
-//                        Toast.makeText(getApplicationContext(), "Subscribed to " + topic, Toast.LENGTH_SHORT).show();
-//                    } catch (MqttException e) {
-//                        e.printStackTrace();
-//                        Toast.makeText(getApplicationContext(), "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
-//        unSubscribe.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String topic = unSubscribeTopic.getText().toString().trim();
-//                if (!topic.isEmpty()) {
-//                    try {
-//                        pahoMqttClient.unSubscribe(client, topic);
-//                        Toast.makeText(getApplicationContext(), "unSubscribed to " + topic, Toast.LENGTH_SHORT).show();
-//                    } catch (MqttException e) {
-//                        e.printStackTrace();
-//                        Toast.makeText(getApplicationContext(), "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
-//
-//        reConnection.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                finish();
-//            }
-//        });
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = findViewById(R.id.drawer);
 
@@ -201,16 +160,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dashboardFragment = new DashboardFragment();
         manageFragment = new ManageFragment();
         eventFragment = new EventFragment();
+        statisticFragment = new Statistic();
 
-//        userName = (TextView) header.findViewById(R.id.usernameGlobal);
-//        userStatus = (TextView) header.findViewById(R.id.textView);
+        userName = (TextView) header.findViewById(R.id.usernameGlobal);
+        userStatus = (TextView) header.findViewById(R.id.textView);
+
+        //userName.setText(user.getDisplayName());
+        //userStatus.setText();
+
+        databaseReference = mDatabase.child("users").child(mAuth.getCurrentUser().getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("First Name").getValue().toString() + " " +dataSnapshot.child("Second Name").getValue().toString();
+                userName.setText(name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+//        final ProgressDialog progressDialog=new ProgressDialog(this);
+//        progressDialog.setTitle("Loading");
 //
-//        userName.setText(user.getDisplayName());
+//        progressDialog.show();
+//        progressDialog.dismiss();
 
-        dashboardFragment = new DashboardFragment();
+
+
         fragmentTransaction.add(R.id.myContainer, dashboardFragment);
         fragmentTransaction.commit();
-
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -222,6 +209,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         //NavigationUI.setupWithNavController(navigationView, navController);
+
+        mainSwitch = (Switch) findViewById(R.id.mainlight);
+        TimerTask task = new TimerTask() {
+            public void run() {
+            }
+        };
+        Timer timer = new Timer("Timer");
+
+        long delay = 1000L;
+        timer.schedule(task, delay);
 
         Intent intent = new Intent(MainActivity.this, MqttMessageService.class);
         startService(intent);
@@ -239,6 +236,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.barmenu, menu);
+//        int connect = 0;
+//        int settings = 1;
+//        MenuItem item = menu.getItem(connect);
+//        SpannableString s = new SpannableString("My red MenuItem");
+//        s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+//        item.setTitle(s);
+
+
+
         return true;
     }
 
@@ -248,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -255,12 +262,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        con = client.isConnected();
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.connectStatus:
+                if (con == true) {
+                    SpannableString s = new SpannableString("Connected");
+                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                    item.setTitle(s);
+                    con = true;
+                    final String[] topics = {"temp", "time", "weather", "client", "mainLight", "extraLight", "song", "voice", "volume", "pause", "mute", "music"};
+                    for (int i = 0; i < topics.length; i++ ){
+                        try {
+                            pahoMqttClient.subscribe(client, topics[i], 1);
+                        } catch (MqttException e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    SpannableString s = new SpannableString("DISCONNECT");
+                    s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+                    item.setTitle(s);
+                    con = false;
+                }
+                break;
+            case R.id.settings:
+
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -281,6 +317,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_events) {
             fragmentTransaction.replace(R.id.myContainer, eventFragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_statistic) {
+            fragmentTransaction.replace(R.id.myContainer, statisticFragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_share) {
@@ -321,11 +361,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
     }
 
     @Override
@@ -338,11 +380,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static MqttAndroidClient getMqttAndroidClient(){
         return client;
     }
+    public static void disconnect() throws MqttException {
+        client.disconnect();
+    }
+    public void newConnected(String URL, String ID){
+       MqttAndroidClient new_client = pahoMqttClient.getMqttClient(getApplicationContext(), URL, ID);
+       client = new_client;
+    }
 
     public void setTemp(String msg){
         textTemp.setText(msg);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getMessage(String top, String msg){
 
+        if (top == "music") {
+            if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
+                startMusicBox = LocalDate.now();
+            if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray())) {
+                stopMusicBox = LocalDate.now();
+                Duration duration = Duration.between(startMusicBox, stopMusicBox);
+                totalMusic += Math.abs(duration.toMinutes());
+            }
+        }
+        if (top == "mainLight") {
+            if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
+                startMainLight = LocalDate.now();
+            if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray())) {
+                stopMainLight = LocalDate.now();
+                Duration duration = Duration.between(startMainLight, stopMainLight);
+                totalExtra += Math.abs(duration.toMinutes());
+            }
+        }
+        if (top == "extraLight") {
+            if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
+                startExtraLight = LocalDate.now();
+            if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray())) {
+                stopExtraLight = LocalDate.now();
+                Duration duration = Duration.between(startExtraLight, stopExtraLight);
+                totalExtra += Math.abs(duration.toMinutes());
+            }
+        }
+        dashboardFragment.getMessage(top, msg);
+
+    }
+
+    public static long getTotalMusic (){
+        return totalMain;
+    }
+
+    public static long getTotalExtra (){
+        return totalExtra;
+    }
+
+    public static long getTotalMain (){
+        return totalMain;
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.app.androidkt.mqtt.ui.slideshow;
+package com.app.androidkt.mqtt.ui.manage.statistic;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;

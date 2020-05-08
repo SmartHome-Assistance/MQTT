@@ -7,6 +7,10 @@
     <color name="colorPrimaryDark">#143854</color>
     <color name="colorAccent">#a4001b</color>
     <color name="colorBackground">#192943</color>
+    <color name="gray">#ECECEC</color>
+    <color name="black">#000000</color>
+    <color name="transparent">@android:color/transparent</color>
+
 </resources>
 <!--
 <color name="colorPrimary">#008577</color>

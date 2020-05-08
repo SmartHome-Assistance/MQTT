@@ -23,16 +23,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.*;
+
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText firstName;//firstname
     private EditText secondName;//secondname
     private EditText userName;//username
     private EditText birthDay;//birthday
-    private EditText studentID;//studentid
+    private EditText ipaddress;//ip address server
+    private EditText loginSr;//login on Server
+    private EditText pswSR;//password on Server
     private EditText numberPhone;//number
     private EditText mEmailField;//mEmailField
     private EditText mPasswordField;//mPasswordField
+    private EditText passwordСonfirm;//passwordСonfirm
     private EditText passwordConfirm;//password_confirm
     private RelativeLayout mRegBtn;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -58,10 +63,13 @@ public class RegistrationActivity extends AppCompatActivity {
         secondName      = (EditText) findViewById(R.id.secondname);
         userName        = (EditText) findViewById(R.id.username);
         birthDay        = (EditText) findViewById(R.id.birthday);
-        studentID       = (EditText) findViewById(R.id.studentid);
+        ipaddress       = (EditText) findViewById(R.id.ipaddress);
+        loginSr         = (EditText) findViewById(R.id.login_server);
+        pswSR           = (EditText) findViewById(R.id.password_server);
         numberPhone     = (EditText) findViewById(R.id.number);
         passwordConfirm = (EditText) findViewById(R.id.password_confirm);
         mPasswordField  = (EditText) findViewById(R.id.mPasswordField);
+        passwordСonfirm  = (EditText) findViewById(R.id.password_confirm);
         mEmailField     = (EditText) findViewById(R.id.mEmailField);
         mRegBtn = (RelativeLayout) findViewById(R.id.mRegBtn);
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -73,6 +81,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Second Name").setValue(secondName.getText().toString());
                     mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("User Name").setValue(userName.getText().toString());
                     mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("BirthDay").setValue(birthDay.getText().toString());
+                    mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("IP address").setValue(ipaddress.getText().toString());
+                    mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Login server").setValue(loginSr.getText().toString());
+                    mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Password server").setValue(pswSR.getText().toString());
                     mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Number Phone").setValue(numberPhone.getText().toString());
                     mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Email").setValue(mEmailField.getText().toString());
                     mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Password").setValue(mPasswordField.getText().toString());
@@ -92,8 +103,14 @@ public class RegistrationActivity extends AppCompatActivity {
     private void startSignUp(){
         String email = mEmailField.getText().toString();
         String password = mPasswordField.getText().toString();
-        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(RegistrationActivity.this, "Field are empty", Toast.LENGTH_LONG).show();
+        String passwordConfirm = passwordСonfirm.getText().toString();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || password.length() < 5 || email.indexOf('@') == -1 ){
+            if (password.length() < 5) Toast.makeText(RegistrationActivity.this, "Password is so short", Toast.LENGTH_LONG).show();
+            else if (email.indexOf('@') == -1) Toast.makeText(RegistrationActivity.this, "Email is not correct", Toast.LENGTH_LONG).show();
+            //else if (passwordConfirm != password) Toast.makeText(RegistrationActivity.this, "Passwords are not the same", Toast.LENGTH_LONG).show();
+            else if (TextUtils.isEmpty(email)) Toast.makeText(RegistrationActivity.this, "Email is empty", Toast.LENGTH_LONG).show();
+            else if (TextUtils.isEmpty(password)) Toast.makeText(RegistrationActivity.this, "Passwords is empty", Toast.LENGTH_LONG).show();
+            else  Toast.makeText(RegistrationActivity.this, "I don't know!", Toast.LENGTH_LONG).show();
         } else {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override

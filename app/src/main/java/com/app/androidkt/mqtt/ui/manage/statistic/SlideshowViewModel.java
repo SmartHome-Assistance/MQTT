@@ -1,16 +1,16 @@
-package com.app.androidkt.mqtt.ui.notifications;
+package com.app.androidkt.mqtt.ui.manage.statistic;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-public class NotificationsViewModel extends ViewModel {
+public class SlideshowViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
+    public SlideshowViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is slideshow fragment");
     }
 
     public LiveData<String> getText() {

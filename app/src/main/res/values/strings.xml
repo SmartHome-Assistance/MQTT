@@ -25,4 +25,9 @@
     <string name="title_activity_start">StartActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string-array name="gender">
+        <item>Woman</item>
+        <item>Man</item>
+    </string-array>
 </resources>

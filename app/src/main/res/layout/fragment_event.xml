@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_marginTop="10dp"
+            android:id="@+id/event1"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/personal_data"
+            android:layout_centerHorizontal="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="100dp">
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_margin="20dp"
+                android:showText="false"
+                android:textSize="20dp"
+                tools:checked="true" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/textView1_1"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_gravity="left|top"
+                android:text="Light" />
+
+            <TextView
+                android:id="@+id/textView1_2"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|bottom"
+                android:text="20:00 - 23:59" />
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="75dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@android:drawable/ic_menu_delete" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/event2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@+id/personal_data"
+            android:layout_centerHorizontal="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="30dp"
+            android:layout_marginTop="10dp"
+            app:cardElevation="100dp">
+
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_margin="20dp"
+                android:showText="false"
+                android:textSize="20dp"
+                tools:checked="true" />
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/textView2_1"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_gravity="left|top"
+                android:text="Play music" />
+
+            <TextView
+                android:id="@+id/textView2_2"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|bottom"
+                android:text="08:30 - 09:30" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="75dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@android:drawable/ic_menu_delete" />
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="10dp"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+</android.support.constraint.ConstraintLayout>
