@@ -35,15 +35,15 @@
 
 ### Скриншоты
 
-![](https://github.com/SmartHome-Assistance/MQTT/scr/1.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/scr/2.jpg)
+![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/1.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/2.jpg)
 
 > Authorization and registration.
 
-![](https://github.com/SmartHome-Assistance/MQTT/scr/8.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/scr/3.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/scr/4.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/scr/5.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/scr/6.jpg)
+![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/8.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/3.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/4.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/5.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/6.jpg)
 
 > Main Activity with fragments
 
-![](https://github.com/SmartHome-Assistance/MQTT/scr/7.jpg)
+![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/7.jpg)
 
 > Settings Activity
 
