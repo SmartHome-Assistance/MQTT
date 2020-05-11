@@ -5,16 +5,16 @@
 
 
 
-#Описание
+# Описание
 Приложение преднозначено для простого и удобного взаимодействия пользователе с системой умного дома. Для опросов состояний датчика, а также их изменения и вывов статистики использования.
 
-#Использованные технологии
+# Использованные технологии
 -  Firebase \- для регистрации и аунтификация пользователей
 - Paho client MQTT \- для общения клиента с сервером
 - SQL \- для зранения данных длиента
 
 
-#Жизнь приложения 
+# Жизнь приложения 
 ## Аctivity
 1. MainActivity - главное активити для отображения фрагментов со вкладок 
 2. LoginActivity - для авторизации пользователя
@@ -22,10 +22,10 @@
 3. SettingActivity - для изменения настроек приложения (уведомления, обновления топиков)
 4. PresentationScreen - экран приветсвования пользователя
 
-##Service
+## Service
 1. MqttMessageService - сервис для отображения уведомлений с топиков
 
-##Fragment
+## Fragment
 1. DashboardFragment - для отображения важных стостояний сервера и топиков, а также их изменения (такие как свет, громкость, пол и тп)
 2. ManageFragment - настройка подключения и клиент сервиса (подписка, отписка  топика и публикация текста на топик)
 3. EventFragment - автоматические сценарии для изменения состояний датчиков
@@ -33,20 +33,19 @@
 
 
 
-###Скриншоты
-![](https://pandao.github.io/editor.md/examples/images/4.jpg)
+### Скриншоты
 
-> Follow your heart.
+![](https://github.com/SmartHome-Assistance/MQTT/src/1.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/src/2.jpg)
 
-![](https://pandao.github.io/editor.md/examples/images/8.jpg)
+> Authorization and registration.
 
-> 图为：厦门白城沙滩 Xiamen
+![](https://github.com/SmartHome-Assistance/MQTT/src/8.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/src/3.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/src/4.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/src/5.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/src/6.jpg)
 
-图片加链接 (Image + Link)：
+> Main Activity with fragments
 
-![](https://pandao.github.io/editor.md/examples/images/7.jpg)](https://pandao.github.io/editor.md/examples/images/7.jpg "李健首张专辑《似水流年》封面")
+![](https://github.com/SmartHome-Assistance/MQTT/src/7.jpg)
 
-> 图为：李健首张专辑《似水流年》封面
+> Settings Activity
 
 
-###End
+### End
