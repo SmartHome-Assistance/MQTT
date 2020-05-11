@@ -18,6 +18,7 @@ import android.util.Log;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import com.app.androidkt.mqtt.MainActivity;
 import com.app.androidkt.mqtt.StartActivity;
@@ -99,6 +100,26 @@ public class MqttMessageService extends Service {
             if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray()))
                 musicPlay = false;
         }
+        if (Arrays.equals(topic.toCharArray(), "wipe".toCharArray())) {
+            try {
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "volume");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "extraLight");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "mainLight");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "voice");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "pause");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "music");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "mute");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "temp");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "client");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "weather");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "time");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "previous");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "following");
+                pahoMqttClient.unSubscribe(mqttAndroidClient, "song");
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        }
         MainActivity.getMessage(topic,msg);
 
 //        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "MQTT")
@@ -120,48 +141,55 @@ public class MqttMessageService extends Service {
 //                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        mNotificationManager.notify(1, mBuilder.build());
 
+        char[] top = topic.toCharArray();
+        if (Arrays.equals(top,"mainLight".toCharArray()) || Arrays.equals(top,"extraLight".toCharArray())
+                || Arrays.equals(top,"song".toCharArray()) || Arrays.equals(top,"weather".toCharArray())
+                || (Arrays.equals(top,"temp".toCharArray()) && Double.valueOf(msg) > 65)) {
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this, "notify_001");
-        Intent ii = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
+            if(Arrays.equals(top,"temp".toCharArray())) msg = "Attention! CPU temperature is too high. " + msg + "°C";
+            if(Arrays.equals(top,"weather".toCharArray())) msg = "Now, the weather outside is " + msg;
+            if(Arrays.equals(top,"weather".toCharArray()))topic = "Weather outside";
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this, "notify_001");
+            Intent ii = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, 0);
 
-        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+            NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
 
 
-        bigText.bigText(topic);
-        bigText.setBigContentTitle(msg);
-        bigText.setSummaryText("");
+            bigText.bigText(topic);
+            bigText.setBigContentTitle(msg);
+            bigText.setSummaryText("");
+//
+//            if (musicPlay == true) {
+//                mBuilder.addAction(R.drawable.ic_media_rew, "Предыдущий", pendingIntent);
+//                mBuilder.addAction(R.drawable.ic_media_play, "Пауза/Плей", pendingIntent);
+//                mBuilder.addAction(R.drawable.ic_media_ff, "Следующий", pendingIntent);
+//            }
 
-        if (musicPlay == true) {
-            mBuilder.addAction(R.drawable.ic_media_rew, "Предыдущий", pendingIntent);
-            mBuilder.addAction(R.drawable.ic_media_play, "Пауза/Плей", pendingIntent);
-            mBuilder.addAction(R.drawable.ic_media_ff, "Следующий", pendingIntent);
-        }
+            mBuilder.setContentIntent(pendingIntent);
+            mBuilder.setSmallIcon(R.drawable.logo_bw);
+            mBuilder.setContentTitle("Topic");
+            mBuilder.setContentText("Message");
+            mBuilder.setPriority(Notification.PRIORITY_MAX);
+            mBuilder.setStyle(bigText);
 
-        mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setSmallIcon(R.drawable.logo_bw);
-        mBuilder.setContentTitle("Your Title");
-        mBuilder.setContentText("Your text");
-        mBuilder.setPriority(Notification.PRIORITY_MAX);
-        mBuilder.setStyle(bigText);
-
-        mNotificationManager =
-                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager =
+                    (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
 // === Removed some obsoletes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            String channelId = "Your_channel_id";
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_HIGH);
-            mNotificationManager.createNotificationChannel(channel);
-            mBuilder.setChannelId(channelId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String channelId = "Your_channel_id";
+                NotificationChannel channel = new NotificationChannel(
+                        channelId,
+                        "Channel human readable title",
+                        NotificationManager.IMPORTANCE_HIGH);
+                mNotificationManager.createNotificationChannel(channel);
+                mBuilder.setChannelId(channelId);
+            }
+            int id = 120;
+            if (musicPlay == true) id = 121;
+            mNotificationManager.notify(id, mBuilder.build());
         }
-        int id =120;
-        if (musicPlay == true) id = 121;
-        mNotificationManager.notify(id, mBuilder.build());
     }
 }

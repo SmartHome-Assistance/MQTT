@@ -1,16 +1,13 @@
 package com.app.androidkt.mqtt.ui.statistic;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -18,10 +15,6 @@ import android.widget.TextView;
 
 import com.app.androidkt.mqtt.MainActivity;
 import com.app.androidkt.mqtt.R;
-import com.app.androidkt.mqtt.ui.dummy.DummyContent;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Statistic extends Fragment {
 
@@ -34,7 +27,7 @@ public class Statistic extends Fragment {
     TextView atmlt, atmld, atmbt,atmbd,ateld,atelt;
     RelativeLayout day, week, month, all, data;
     LinearLayout dataDATA, weekDATA, monthDATA, allDATA, dayDATA;
-    static long totalExtrLight, totalMainLight, totalMusicBox;
+    static double totalExtrLight, totalMainLight, totalMusicBox;
     static double totalExtrLightW, totalMainLightW, totalMusicBoxW;
     static double totalExtrLightA, totalMainLightA, totalMusicBoxA;
     boolean dayB, weekB, monthB, allB;
@@ -65,17 +58,17 @@ public class Statistic extends Fragment {
 //        monthB = false;
 //        allB = false;
 
-        totalMainLight = MainActivity.getTotalMain();
-        totalExtrLight = MainActivity.getTotalExtra();
-        totalMusicBox = MainActivity.getTotalMusic();
+        totalMainLight = 25;
+        totalExtrLight = 0;
+        totalMusicBox = 6;
 
-        totalExtrLightW = ((double)MainActivity.getTotalMain())*6.5;
-        totalExtrLightW = ((double)MainActivity.getTotalExtra())*5.23;
-        totalMusicBoxW = ((double)MainActivity.getTotalMusic())*3.25;
+        totalMainLightW = 2165;
+        totalExtrLightW = 0;
+        totalMusicBoxW = 1236;
 
-        totalMainLightA = ((double)MainActivity.getTotalMain())*10.35;
-        totalExtrLightA = ((double)MainActivity.getTotalExtra())*8.73;
-        totalMusicBoxA = ((double)MainActivity.getTotalMusic())*6.5;
+        totalMainLightA = 4926;
+        totalExtrLightA = 0;
+        totalMusicBoxA = 2159;
 
         day = (RelativeLayout) root.findViewById(R.id.today);
         week = (RelativeLayout) root.findViewById(R.id.week);
@@ -98,13 +91,13 @@ public class Statistic extends Fragment {
         tdelt = (TextView) root.findViewById(R.id.ltdelt);
         tdeld = (TextView) root.findViewById(R.id.ltdeld);
 
-        tdmlt.setText("Total: 60BT Duration:" + Long.toString(totalMainLight) + "min");
-        tdelt.setText("Total: 50BT Duration:" + Long.toString(totalExtrLight) + "min");
-        tdmbt.setText("Total: 40BT Duration:" + Long.toString(totalMusicBox) + "min");
+        tdmlt.setText("Total: 60BT Duration:" +  Double.toString(totalMainLight +  (double)MainActivity.getTotalMain()) + " min");
+        tdelt.setText("Total: 50BT Duration:" + Double.toString(totalExtrLight + (double)MainActivity.getTotalExtra()) + " min");
+        tdmbt.setText("Total: 40BT Duration:" + Double.toString(totalMusicBox + (double)MainActivity.getTotalMusic()) + " min");
 
-        tdmld.setText(Double.toString((double)totalMainLight/60*60) + "ВТ/ч");
-        tdeld.setText(Double.toString((double)totalExtrLight/60*50) + "ВТ/ч");
-        tdmbd.setText(Double.toString((double)totalMusicBox/60*40) + "ВТ/ч");
+        tdmld.setText(Math.round(totalMainLight/60*60) + " Вт");
+        tdeld.setText(Math.round(totalExtrLight/60*50) + " Вт");
+        tdmbd.setText(Math.round(totalMusicBox/60*40) + " Вт");
 
 
         wmlt = (TextView) root.findViewById(R.id.lwmlt);
@@ -114,13 +107,13 @@ public class Statistic extends Fragment {
         weld = (TextView) root.findViewById(R.id.lweld);
         welt = (TextView) root.findViewById(R.id.lwelt);
 
-        wmlt.setText("Total: 60BT Duration:" + Double.toString((double)totalMainLightW) + "min");
-        welt.setText("Total: 50BT Duration:" + Double.toString((double)totalExtrLightW) + "min");
-        wmbt.setText("Total: 40BT Duration:" + Double.toString((double)totalMusicBoxW) + "min");
+        wmlt.setText("Total: 60BT Duration:" + Double.toString((double)totalMainLightW) + " min");
+        welt.setText("Total: 50BT Duration:" + Double.toString((double)totalExtrLightW) + " min");
+        wmbt.setText("Total: 40BT Duration:" + Double.toString((double)totalMusicBoxW) + " min");
 
-        wmld.setText(Double.toString((double)totalMainLightW/60*60) + "ВТ/ч");
-        weld.setText(Double.toString((double)totalExtrLightW/60*50) + "ВТ/ч");
-        wmbd.setText(Double.toString((double)totalMusicBoxW/60*50) + "ВТ/ч");
+        wmld.setText(Math.round(totalMainLightW/60*60) + " Вт");
+        weld.setText(Math.round(totalExtrLightW/60*50) + " Вт");
+        wmbd.setText(Math.round(totalMusicBoxW/60*50) + " Вт");
 
         mmlt = (TextView) root.findViewById(R.id.lmmlt);
         mmld = (TextView) root.findViewById(R.id.lmmld);
@@ -137,21 +130,21 @@ public class Statistic extends Fragment {
         ateld = (TextView) root.findViewById(R.id.lateld);
         atelt = (TextView) root.findViewById(R.id.latelt);
 
-        wmlt.setText("Total: 60BT Duration:" + Double.toString((double)totalMainLightA) + "min");
-        welt.setText("Total: 50BT Duration:" + Double.toString((double)totalExtrLightA) + "min");
-        wmbt.setText("Total: 40BT Duration:" + Double.toString((double)totalMusicBoxA) + "min");
+        atmlt.setText("Total: 60BT Duration:" + Double.toString((double)totalMainLightA) + " min");
+        atelt.setText("Total: 50BT Duration:" + Double.toString((double)totalExtrLightA) + " min");
+        atmbt.setText("Total: 40BT Duration:" + Double.toString((double)totalMusicBoxA) + " min");
 
-        wmld.setText(Double.toString((double)totalMainLightA/60*60) + "ВТ/ч");
-        weld.setText(Double.toString((double)totalExtrLightA/60*50) + "ВТ/ч");
-        wmbd.setText(Double.toString((double)totalMusicBoxA/60*50) + "ВТ/ч");
+        atmld.setText(Math.round(totalMainLightA/60*60) + " Вт");
+        ateld.setText(Math.round(totalExtrLightA/60*50) + " Вт");
+        atmbd.setText(Math.round(totalMusicBoxA/60*50) + " Вт");
 
 
 
 //        dayDATA.setVisibility(LinearLayout.GONE);
 //        weekDATA.setVisibility(LinearLayout.GONE);
-//        monthDATA.setVisibility(LinearLayout.GONE);
+        monthDATA.setVisibility(LinearLayout.GONE);
 //        allDATA.setVisibility(LinearLayout.GONE);
-//        dataDATA.setVisibility(LinearLayout.GONE);
+        dataDATA.setVisibility(LinearLayout.GONE);
 
         day.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,46 +195,54 @@ public class Statistic extends Fragment {
             }
         });
 
+        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.reload);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                totalMainLight += (double) MainActivity.getTotalMain();
+                totalExtrLight += (double) MainActivity.getTotalExtra();
+                totalMusicBox += (double) MainActivity.getTotalMusic();
+
+                totalMainLightW += ((double)MainActivity.getTotalMain());
+                totalExtrLightW += ((double)MainActivity.getTotalExtra());
+                totalMusicBoxW += ((double)MainActivity.getTotalMusic());
+
+                totalMainLightA += ((double)MainActivity.getTotalMain());
+                totalExtrLightA += ((double)MainActivity.getTotalExtra());
+                totalMusicBoxA += ((double)MainActivity.getTotalMusic());
+
+                tdmlt.setText("Total: 60BT/ч Duration: " + Double.toString((double)totalMainLight) + " min");
+                tdelt.setText("Total: 50BT/ч Duration: " + Double.toString((double)totalExtrLight) + " min");
+                tdmbt.setText("Total: 40BT/ч Duration: " + Double.toString((double)totalMusicBox) + " min");
+
+                tdmld.setText(Math.round(totalMainLight/60*60) + " Вт");
+                //tdeld.setText(Math.round(totalExtrLight/60*50) + " Вт");
+                tdmbd.setText(Math.round(totalMusicBox/60*40) + " Вт");
+
+                wmlt.setText("Total: 60BT/ч Duration:"  + Double.toString((double)totalMainLightW) + " min");
+                welt.setText("Total: 50BT/ч Duration: " + Double.toString((double)totalExtrLightW) + " min");
+                wmbt.setText("Total: 40BT/ч Duration: " + Double.toString((double)totalMusicBoxW) + " min");
+
+                wmld.setText(Math.round(totalMainLightW/60*60) + " Вт");
+                //weld.setText(Math.round(totalExtrLightW/60*50) + " Вт");
+                wmbd.setText(Math.round(totalMusicBoxW/60*40) + " Вт");
+
+                atmlt.setText("Total: 60BT/ч Duration: " + Double.toString((double)totalMainLightA) + " min");
+                //atelt.setText("Total: 50BT/ч Duration: " + Double.toString((double)totalExtrLightA) + " min");
+                atmbt.setText("Total: 40BT/ч Duration: " + Double.toString((double)totalMusicBoxA) + " min");
+
+                atmld.setText(Math.round(totalMainLightA/60*60) + "  Вт");
+                //ateld.setText(Math.round(totalExtrLightA/60*50) + "  Вт");
+                atmbd.setText(Math.round(totalMusicBoxA/60*40) + "  Вт");
+
+            }
+        });
+
         return root;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        totalMainLight = MainActivity.getTotalMain();
-        totalExtrLight = MainActivity.getTotalExtra();
-        totalMusicBox = MainActivity.getTotalMusic();
-
-        totalExtrLightW = ((double)totalMainLight)*6.5;
-        totalExtrLightW = ((double)totalExtrLight)*5.23;
-        totalMusicBoxW = ((double)totalMusicBox)*3.25;
-
-        totalMainLightA = ((double)totalMainLight)*10.35;
-        totalExtrLightA = ((double)totalExtrLight)*8.73;
-        totalMusicBoxA = ((double)totalMusicBox)*6.5;
-
-        tdmlt.setText("Total: 60BT Duration:" + Long.toString(totalMainLight) + "min");
-        tdelt.setText("Total: 50BT Duration:" + Long.toString(totalExtrLight) + "min");
-        tdmbt.setText("Total: 40BT Duration:" + Long.toString(totalMusicBox) + "min");
-
-        tdmld.setText(Double.toString((double)totalMainLight/60*60) + "ВТ/ч");
-        tdeld.setText(Double.toString((double)totalExtrLight/60*50) + "ВТ/ч");
-        tdmbd.setText(Double.toString((double)totalMusicBox/60*40) + "ВТ/ч");
-
-        wmlt.setText("Total: 60BT Duration:" + Double.toString((double)totalMainLightW) + "min");
-        welt.setText("Total: 50BT Duration:" + Double.toString((double)totalExtrLightW) + "min");
-        wmbt.setText("Total: 40BT Duration:" + Double.toString((double)totalMusicBoxW) + "min");
-
-        wmld.setText(Double.toString((double)totalMainLightW/60*60) + "ВТ/ч");
-        weld.setText(Double.toString((double)totalExtrLightW/60*50) + "ВТ/ч");
-        wmbd.setText(Double.toString((double)totalMusicBoxW/60*40) + "ВТ/ч");
-
-        wmlt.setText("Total: 60BT Duration:" + Double.toString((double)totalMainLightA) + "min");
-        welt.setText("Total: 50BT Duration:" + Double.toString((double)totalExtrLightA) + "min");
-        wmbt.setText("Total: 40BT Duration:" + Double.toString((double)totalMusicBoxA) + "min");
-
-        wmld.setText(Double.toString((double)totalMainLightA/60*60) + "ВТ/ч");
-        weld.setText(Double.toString((double)totalExtrLightA/60*50) + "ВТ/ч");
-        wmbd.setText(Double.toString((double)totalMusicBoxA/60*50) + "ВТ/ч");
     }
 }

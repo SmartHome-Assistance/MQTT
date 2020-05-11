@@ -1,7 +1,9 @@
 package com.app.androidkt.mqtt;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,14 +35,18 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.app.androidkt.mqtt.ui.home.HomeFragment;
 import com.app.androidkt.mqtt.ui.statistic.Statistic;
 import com.app.androidkt.mqtt.ui.statistic.StatisticFragment;
 import com.app.androidkt.mqtt.ui.dashboard.DashboardFragment;
 import com.app.androidkt.mqtt.ui.event.EventFragment;
 import com.app.androidkt.mqtt.ui.manage.ManageFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ManageFragment manageFragment;
     private EventFragment eventFragment;
     private Statistic statisticFragment;
+    private HomeFragment homeFragment;
     private List<String> DATA;
     private boolean con;
     private Switch mainSwitch;
@@ -110,14 +118,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static LocalDate startMusicBox;
     static LocalDate stopMusicBox;
     static long totalMain, totalExtra, totalMusic;
-
+    Intent intentSer;
+    static Integer count;
     private ActionBarDrawerToggle toggle;
+    static Context conMA;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_menu);
 
+        count = 0;
+        conMA = getApplicationContext();
         pahoMqttClient = new PahoMqttClient();
         client = pahoMqttClient.getMqttClient(getApplicationContext(), Constants.MQTT_BROKER_URL, Constants.CLIENT_ID);
         con = false;
@@ -161,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         manageFragment = new ManageFragment();
         eventFragment = new EventFragment();
         statisticFragment = new Statistic();
+        homeFragment = new HomeFragment();
 
         userName = (TextView) header.findViewById(R.id.usernameGlobal);
         userStatus = (TextView) header.findViewById(R.id.textView);
@@ -172,8 +186,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("First Name").getValue().toString() + " " +dataSnapshot.child("Second Name").getValue().toString();
-                userName.setText(name);
+                //String name = dataSnapshot.child("First Name").getValue().toString() + " " + dataSnapshot.child("Second Name").getValue().toString();
+                //String status = dataSnapshot.child("IP address").getValue().toString() + " - " + dataSnapshot.child("Login server").getValue().toString();
+                userName.setText("Aleksandr Smirnov");
+                userStatus.setText("192.168.88.252:1883 - admin");
             }
 
             @Override
@@ -182,46 +198,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
-
-
-
-
-
-//        final ProgressDialog progressDialog=new ProgressDialog(this);
-//        progressDialog.setTitle("Loading");
-//
-//        progressDialog.show();
-//        progressDialog.dismiss();
-
-
-
         fragmentTransaction.add(R.id.myContainer, dashboardFragment);
         fragmentTransaction.commit();
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-//        mAppBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.nav_main, R.id.nav_gallery, R.id.nav_slideshow,
-//                R.id.nav_manage, R.id.nav_share, R.id.nav_send)
-//                .setDrawerLayout(drawer)
-//                .build();
-        //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        //NavigationUI.setupWithNavController(navigationView, navController);
 
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction.replace(R.id.myContainer, homeFragment);
+                fragmentTransaction.commit();
+
+            }
+        });
+        userStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction.replace(R.id.myContainer, homeFragment);
+                fragmentTransaction.commit();
+            }
+        });
         mainSwitch = (Switch) findViewById(R.id.mainlight);
         TimerTask task = new TimerTask() {
             public void run() {
             }
         };
-        Timer timer = new Timer("Timer");
 
-        long delay = 1000L;
-        timer.schedule(task, delay);
-
-        Intent intent = new Intent(MainActivity.this, MqttMessageService.class);
-        startService(intent);
+        intentSer = new Intent(MainActivity.this, MqttMessageService.class);
+        startService(intentSer);
     }
     @Override
     public void onBackPressed() {
@@ -262,34 +265,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        con = client.isConnected();
+        //con = client.isConnected();
 
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()){
             case R.id.connectStatus:
                 if (con == true) {
-                    SpannableString s = new SpannableString("Connected");
-                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-                    item.setTitle(s);
-                    con = true;
-                    final String[] topics = {"temp", "time", "weather", "client", "mainLight", "extraLight", "song", "voice", "volume", "pause", "mute", "music"};
-                    for (int i = 0; i < topics.length; i++ ){
-                        try {
-                            pahoMqttClient.subscribe(client, topics[i], 1);
-                        } catch (MqttException e) {
-                            e.printStackTrace();
-                            Toast.makeText(this, "Error "+ e.toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
                     SpannableString s = new SpannableString("DISCONNECT");
                     s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
                     item.setTitle(s);
                     con = false;
+                } else {
+                    try {
+                        pahoMqttClient.subscribe(client, "volume",1);
+                        pahoMqttClient.subscribe(client, "extraLight",1);
+                        pahoMqttClient.subscribe(client, "mainLight",1);
+                        pahoMqttClient.subscribe(client, "voice",1);
+                        pahoMqttClient.subscribe(client, "pause",1);
+                        pahoMqttClient.subscribe(client, "music",1);
+                        pahoMqttClient.subscribe(client, "mute",1);
+                        pahoMqttClient.subscribe(client, "temp",1);
+                        pahoMqttClient.subscribe(client, "client",1);
+                        pahoMqttClient.subscribe(client, "weather",1);
+                        pahoMqttClient.subscribe(client, "time",1);
+                        pahoMqttClient.subscribe(client, "previous",1);
+                        pahoMqttClient.subscribe(client, "following",1);
+                        pahoMqttClient.subscribe(client, "song",1);
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+                    SpannableString s = new SpannableString("Connected");
+                    s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+                    item.setTitle(s);
+                    con = true;
                 }
                 break;
             case R.id.settings:
-
+                Intent i  = new Intent(this, SettingsActivity.class);
+                startActivity(i);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -322,30 +335,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_statistic) {
             fragmentTransaction.replace(R.id.myContainer, statisticFragment);
             fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_share) {
-
-
+        } else if (id == R.id.nav_settings) {
+            Intent i  = new Intent(this, SettingsActivity.class);
+            startActivity(i);
             //mDatabase.child("users").child(user.getUid()).child("username").setValue(user.getDisplayName());
             //mDatabase.child("users").child(user.getUid()).child("studentID").setValue("S3919000");
 
-        } else if (id == R.id.nav_send) {
-            //userStatus.setText(mFirebaseAnalytics.);
-//            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                    .setDisplayName("Лучший постановщик")
-//                    .setPhotoUri(Uri.parse("https://example.com/example.jpg"))
-//                    .build();
-//
-//            user.updateProfile(profileUpdates)
-//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            if (task.isSuccessful()) {
-//                                Toast.makeText(MainActivity.this, "Work", Toast.LENGTH_LONG).show();
-//
-//                            }
-//                        }
-//                    });
 
         }else if (id == R.id.exit) {
             FirebaseAuth.getInstance().signOut();
@@ -361,7 +356,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -373,6 +367,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopService(intentSer);
+        desc();
+    }
+
+    public static void desc(){
+        try {
+            pahoMqttClient.unSubscribe(client, "volume");
+            pahoMqttClient.unSubscribe(client, "extraLight");
+            pahoMqttClient.unSubscribe(client, "mainLight");
+            pahoMqttClient.unSubscribe(client, "voice");
+            pahoMqttClient.unSubscribe(client, "pause");
+            pahoMqttClient.unSubscribe(client, "music");
+            pahoMqttClient.unSubscribe(client, "mute");
+            pahoMqttClient.unSubscribe(client, "temp");
+            pahoMqttClient.unSubscribe(client, "client");
+            pahoMqttClient.unSubscribe(client, "weather");
+            pahoMqttClient.unSubscribe(client, "time");
+            pahoMqttClient.unSubscribe(client, "previous");
+            pahoMqttClient.unSubscribe(client, "following");
+            pahoMqttClient.unSubscribe(client, "song");
+            pahoMqttClient.disconnect(client);
+            client.disconnect();
+
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+        Log.v("oooooooooooooo", "destroy");
     }
     public static PahoMqttClient getPahoMqttClient() {
         return pahoMqttClient;
@@ -394,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void getMessage(String top, String msg){
-
+        count+=1;
         if (top == "music") {
             if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
                 startMusicBox = LocalDate.now();
@@ -423,6 +444,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         dashboardFragment.getMessage(top, msg);
+        if (count == 50) {
+            desc();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pahoMqttClient = new PahoMqttClient();
+            client = pahoMqttClient.getMqttClient(conMA, Constants.MQTT_BROKER_URL, Constants.CLIENT_ID);
+            count=0;
+        }
 
     }
 

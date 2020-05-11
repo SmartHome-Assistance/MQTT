@@ -42,7 +42,7 @@ public class DashboardFragment extends Fragment {
     static private PahoMqttClient pahoMqttClient;
     private MqttAndroidClient client;
 
-    private static EditText temp,time, clientCon;
+    private static EditText temp,time, clientCon, weeather;
     private static Switch mainLight, extraLight;
     private static TextView song;
     private static ImageButton previousM, followingM, music;
@@ -54,6 +54,7 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         playMusic = false;
         pauseMusic = false;
         pahoMqttClient = MainActivity.getPahoMqttClient();
@@ -66,6 +67,7 @@ public class DashboardFragment extends Fragment {
         temp = (EditText) root.findViewById(R.id.text_temp);
         time = (EditText) root.findViewById(R.id.text_time);
         clientCon = (EditText) root.findViewById(R.id.text_client);
+        weeather = (EditText) root.findViewById(R.id.text_tempOut);
 
         mainLight = (Switch) root.findViewById(R.id.mainlight);
         extraLight= (Switch) root.findViewById(R.id.extralight);
@@ -196,16 +198,19 @@ public class DashboardFragment extends Fragment {
 
     public static void getMessage(String top, String msg){
         char[] s1 = msg.toCharArray();
-        temp.setText(temp.getText() + " | "+ top + " " + msg);
+        //temp.setText(temp.getText() + " | "+ top + " " + msg);
         switch (top){
             case "temp":
-                temp.setText(msg);
+                temp.setText(msg + " °C");
                 break;
             case "time":
                 time.setText(msg);
                 break;
             case "client":
                 clientCon.setText(msg);
+                break;
+            case "weather":
+                weeather.setText(msg);
                 break;
             case "mainLight":
                 if (Arrays.equals(s1,"ON".toCharArray()))

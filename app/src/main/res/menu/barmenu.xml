@@ -8,7 +8,7 @@
         android:checkable="false"
         app:showAsAction="always" />
     <item
-        android:id="@+id/sb"
+        android:id="@+id/settings"
         android:menuCategory="system"
         android:orderInCategory="100"
         android:title="Settings"

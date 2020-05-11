@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_main"
             android:icon="@drawable/ic_home"
-            android:title="Main" />
+            android:title="Dashsboard" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
@@ -20,22 +20,30 @@
             android:id="@+id/nav_statistic"
             android:icon="@drawable/ic_statis"
             android:title="Statistic" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_feedback"
+                android:icon="@drawable/ic_feed_back"
+                android:title="Feed back" >
+            </item>
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_healp"
+                android:title="Help" >
+
+            </item>
         </menu>
     </item>
     <item
         android:id="@+id/exit"
-        android:title="Exit" />
+        android:title="Exit"
+        android:icon="@drawable/ic_log_out"/>
 
 </menu>
