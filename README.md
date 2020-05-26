@@ -5,16 +5,16 @@
 
 
 
-# Описание
+#Описание
 Приложение преднозначено для простого и удобного взаимодействия пользователе с системой умного дома. Для опросов состояний датчика, а также их изменения и вывов статистики использования.
 
-# Использованные технологии
+#Использованные технологии
 -  Firebase \- для регистрации и аунтификация пользователей
 - Paho client MQTT \- для общения клиента с сервером
 - SQL \- для зранения данных длиента
 
 
-# Жизнь приложения 
+#Жизнь приложения 
 ## Аctivity
 1. MainActivity - главное активити для отображения фрагментов со вкладок 
 2. LoginActivity - для авторизации пользователя
@@ -22,10 +22,10 @@
 3. SettingActivity - для изменения настроек приложения (уведомления, обновления топиков)
 4. PresentationScreen - экран приветсвования пользователя
 
-## Service
+##Service
 1. MqttMessageService - сервис для отображения уведомлений с топиков
 
-## Fragment
+##Fragment
 1. DashboardFragment - для отображения важных стостояний сервера и топиков, а также их изменения (такие как свет, громкость, пол и тп)
 2. ManageFragment - настройка подключения и клиент сервиса (подписка, отписка  топика и публикация текста на топик)
 3. EventFragment - автоматические сценарии для изменения состояний датчиков
@@ -33,19 +33,20 @@
 
 
 
-### Скриншоты
+###Скриншоты
+![](https://pandao.github.io/editor.md/examples/images/4.jpg)
 
-![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/1.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/2.jpg)
+> Follow your heart.
 
-> Authorization and registration.
+![](https://pandao.github.io/editor.md/examples/images/8.jpg)
 
-![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/8.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/3.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/4.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/5.jpg) ![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/6.jpg)
+> 图为：厦门白城沙滩 Xiamen
 
-> Main Activity with fragments
+图片加链接 (Image + Link)：
 
-![](https://github.com/SmartHome-Assistance/MQTT/blob/master/scr/7.jpg)
+![](https://pandao.github.io/editor.md/examples/images/7.jpg)](https://pandao.github.io/editor.md/examples/images/7.jpg "李健首张专辑《似水流年》封面")
 
-> Settings Activity
+> 图为：李健首张专辑《似水流年》封面
 
 
-### End
+###End

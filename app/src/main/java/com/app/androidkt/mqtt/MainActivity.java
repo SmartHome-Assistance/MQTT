@@ -19,12 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +59,7 @@ import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
@@ -122,6 +126,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static Integer count;
     private ActionBarDrawerToggle toggle;
     static Context conMA;
+    static View micro;
+    public static RecognizerSpeach recognizerSpeach;
+    static boolean statmainlight;
+    static String temperature;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -189,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //String name = dataSnapshot.child("First Name").getValue().toString() + " " + dataSnapshot.child("Second Name").getValue().toString();
                 //String status = dataSnapshot.child("IP address").getValue().toString() + " - " + dataSnapshot.child("Login server").getValue().toString();
                 userName.setText("Aleksandr Smirnov");
-                userStatus.setText("192.168.88.252:1883 - admin");
+                userStatus.setText("192.168.0.7:1883 - admin");
             }
 
             @Override
@@ -223,6 +232,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
+
+
+        
         intentSer = new Intent(MainActivity.this, MqttMessageService.class);
         startService(intentSer);
     }
@@ -362,6 +374,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
 
+        recognizerSpeach = new RecognizerSpeach(this);
+
     }
 
     @Override
@@ -369,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         stopService(intentSer);
         desc();
+        recognizerSpeach.onDestroy();
     }
 
     public static void desc(){
@@ -395,15 +410,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         Log.v("oooooooooooooo", "destroy");
     }
+
     public static PahoMqttClient getPahoMqttClient() {
         return pahoMqttClient;
     }
+
     public static MqttAndroidClient getMqttAndroidClient(){
         return client;
     }
+
     public static void disconnect() throws MqttException {
         client.disconnect();
     }
+
     public void newConnected(String URL, String ID){
        MqttAndroidClient new_client = pahoMqttClient.getMqttClient(getApplicationContext(), URL, ID);
        client = new_client;
@@ -416,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void getMessage(String top, String msg){
         count+=1;
-        if (top == "music") {
+        if (Arrays.equals(top.toCharArray(), "music".toCharArray())) {
             if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
                 startMusicBox = LocalDate.now();
             if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray())) {
@@ -425,22 +444,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 totalMusic += Math.abs(duration.toMinutes());
             }
         }
-        if (top == "mainLight") {
+        if (Arrays.equals(top.toCharArray(), "mainLight".toCharArray())) {
             if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
+                statmainlight = true;
                 startMainLight = LocalDate.now();
             if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray())) {
+                statmainlight = false;
                 stopMainLight = LocalDate.now();
                 Duration duration = Duration.between(startMainLight, stopMainLight);
                 totalExtra += Math.abs(duration.toMinutes());
             }
         }
-        if (top == "extraLight") {
+        if (Arrays.equals(top.toCharArray(), "extraLight".toCharArray())) {
             if (Arrays.equals(msg.toCharArray(), "ON".toCharArray()))
                 startExtraLight = LocalDate.now();
             if (Arrays.equals(msg.toCharArray(), "OFF".toCharArray())) {
                 stopExtraLight = LocalDate.now();
                 Duration duration = Duration.between(startExtraLight, stopExtraLight);
                 totalExtra += Math.abs(duration.toMinutes());
+            }
+        }
+        if (Arrays.equals(top.toCharArray(), "weather".toCharArray())) {
+            temperature = msg;
+        }
+        if (Arrays.equals(top.toCharArray(), "temp".toCharArray())){
+            if (Double.valueOf(msg) > 65){
+                recognizerSpeach.speak("Температура процессора слишком высокая!");
             }
         }
         dashboardFragment.getMessage(top, msg);
@@ -456,6 +485,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             count=0;
         }
 
+    }
+    public static String getweather(){
+
+        return temperature;
+    }
+    public static void changeLight(){
+        String msg;
+        if (statmainlight) {
+            msg = "OFF";
+            statmainlight = false;
+        }
+        else  {
+            msg = "ON";
+            statmainlight = true;
+        }
+        try {
+            pahoMqttClient.publishMessage(client, msg, 1, "mainLight");
+        } catch (MqttException e) {e.printStackTrace();} catch (UnsupportedEncodingException e) {e.printStackTrace();}
     }
 
     public static long getTotalMusic (){

@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/MQTT.iml" filepath="$PROJECT_DIR$/MQTT.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/MQTT-app.iml" filepath="$PROJECT_DIR$/app/MQTT-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/MQTT-master.iml" filepath="$PROJECT_DIR$/MQTT-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MQTT-master-MQTT-master.iml" filepath="$PROJECT_DIR$/MQTT-master-MQTT-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/MQTT-master-app.iml" filepath="$PROJECT_DIR$/app/MQTT-master-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

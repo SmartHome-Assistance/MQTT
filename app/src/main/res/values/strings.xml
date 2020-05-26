@@ -84,4 +84,6 @@
     <string name="key_notifications_new_message_ringtone">key_notifications_new_message_ringtone</string>
     <string name="key_vibrate">key_vibrate</string>
     <string name="key_send_feedback">key_send_feedback</string>
+    <string name="hotword">номад</string>
+    <string name="tile_content_description">Main light</string>
 </resources>

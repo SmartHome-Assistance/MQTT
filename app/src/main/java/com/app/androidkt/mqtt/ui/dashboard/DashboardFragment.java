@@ -2,7 +2,9 @@ package com.app.androidkt.mqtt.ui.dashboard;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -49,6 +52,7 @@ public class DashboardFragment extends Fragment {
     private static CheckBox mute;
     private static SeekBar volume;
     private static Spinner gender;
+    private static ImageView micro;
 
     private static boolean playMusic, pauseMusic;
 
@@ -188,6 +192,28 @@ public class DashboardFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+
+        micro = (ImageView) root.findViewById(R.id.microfone);
+        micro.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        micro.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        Toast.makeText(((MainActivity) getActivity()).getApplicationContext(), "I am listening", Toast.LENGTH_SHORT).show();
+                        MainActivity.recognizerSpeach.startStopRecognition();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        MainActivity.recognizerSpeach.stopRecognition();
+                        Toast.makeText(((MainActivity) getActivity()).getApplicationContext(), "I stop listen", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
+
+
         return root;
     }
 

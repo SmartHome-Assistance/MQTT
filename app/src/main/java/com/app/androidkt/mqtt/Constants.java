@@ -11,7 +11,7 @@ public class Constants {
     private static PahoMqttClient pahoMqttClient;
 
 
-    public static final String MQTT_BROKER_URL = "tcp://192.168.88.252:1883";
+        public static final String MQTT_BROKER_URL = "tcp://192.168.0.7:1883";
     public static final String PUBLISH_TOPIC = "test";
     public static final String CLIENT_ID = "androidkt";
     public static final String LOGIN_SERVER = "admin";
